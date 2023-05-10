@@ -1,0 +1,58 @@
+body {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.calculator__body {
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.calculator__buttons {
+  display: flex;
+}
+
+.calculator__buttons button {
+  font-size: 32px;
+  color: white;
+  background-color: black;
+}
+
+.calculator__buttons .operator {
+  background-color: orange;
+}
+
+.calculator__buttons__left {
+  display: flex;
+  flex-flow: row wrap;
+  flex: 3;
+}
+
+.calculator__buttons__left button {
+  width: 33.333%;
+}
+
+.calculator__buttons__right {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.calculator__output {
+  background-color: lightgray;
+  height: 52px;
+  padding: 4px;
+  font-size: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+#operatorHistory {
+  font-size: 16px;
+}
