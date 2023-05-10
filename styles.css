@@ -22,7 +22,7 @@ body {
   background-color: black;
 }
 
-.calculator__buttons .operator {
+.calculator__buttons .operator, #clear {
   background-color: orange;
 }
 
