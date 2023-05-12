@@ -56,6 +56,7 @@ const equalsButton = document.getElementById('equals');
 equalsButton.addEventListener('click', () => {
     if (!currentOperator && lastOperator) repeated = true;
     operate(currentOperator ?? lastOperator, term1, term2);
+    repeated = false;
     if (!error) {
       operatorHistory.textContent += " =";
     }
@@ -67,15 +68,24 @@ const operators = document.querySelectorAll('.operator');
 let currentOperator;
 let lastOperator;
 function operatorSelected(operator) {
-  if (currentOperator === operator.value) return;
+  if (currentOperator === operator.value) {
+    if (term2) {
+      console.log(term2);
+      operate(currentOperator, term1, term2);
+      term2 = undefined;
+    }
+  }
   if (currentOperator && currentOperator !== operator.value) {
-    operatorHistory.textContent = operatorHistory.textContent.slice(0, operatorHistory.textContent.length-1) + operator.textContent;
     currentOperator = operator.value;
+    if (term2) {
+      operate(currentOperator, term1, term2);
+      term2 = undefined;
+    }
+    else operatorHistory.textContent = operatorHistory.textContent.slice(0, operatorHistory.textContent.length-1) + operator.textContent;
   }
   if (!currentOperator) {
     currentOperator = operator.value;
     operatorHistory.textContent = ` ${term1} ${operator.textContent}`;
-    return;
   }
 }
 operators.forEach((operator) => operator.addEventListener('click', () => operatorSelected(operator)));
