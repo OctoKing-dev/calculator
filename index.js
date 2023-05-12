@@ -7,6 +7,10 @@ function add(a, b) {
   return +a + +b;
 }
 
+function subtract(a, b) {
+  return +a - +b;
+}
+
 let repeated;
 function operate(operation, a, b) {
   if (b === undefined) {
@@ -18,6 +22,9 @@ function operate(operation, a, b) {
     case "add":
       result = add(a, b);
       break;
+    case "subtract":
+      result = subtract(a, b);
+      break;
     default:
       result = a;
       break;
@@ -28,6 +35,9 @@ function operate(operation, a, b) {
     switch (operation) {
       case "add":
         operator = "+";
+        break;
+      case "subtract":
+        operator = '-';
         break;
     }
     if (operator) operatorHistory.textContent = `${a} ${operator} ${b}`
