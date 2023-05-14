@@ -7,6 +7,10 @@ function add(a, b) {
   return +a + +b;
 }
 
+function multiply(a, b) {
+  return +a * +b;
+}
+
 function subtract(a, b) {
   return +a - +b;
 }
@@ -23,6 +27,9 @@ function operate(operation, a, b) {
     case "add":
       result = add(a, b);
       break;
+    case "multiply":
+      result = multiply(a, b);
+      break;
     case "subtract":
       result = subtract(a, b);
       break;
@@ -36,6 +43,9 @@ function operate(operation, a, b) {
     switch (operation) {
       case "add":
         operator = "+";
+        break;
+      case "multiply":
+        operator = "*";
         break;
       case "subtract":
         operator = '-';
