@@ -11,6 +11,7 @@ function subtract(a, b) {
   return +a - +b;
 }
 
+let lastOperator;
 let repeated;
 function operate(operation, a, b) {
   if (b === undefined) {
@@ -55,6 +56,7 @@ function operate(operation, a, b) {
 const equalsButton = document.getElementById('equals');
 equalsButton.addEventListener('click', () => {
     if (!currentOperator && lastOperator) repeated = true;
+    if (!term2) term2 = term1;
     operate(currentOperator ?? lastOperator, term1, term2);
     repeated = false;
     if (!error) {
@@ -66,7 +68,6 @@ equalsButton.addEventListener('click', () => {
 const operators = document.querySelectorAll('.operator');
 
 let currentOperator;
-let lastOperator;
 function operatorSelected(operator) {
   if (currentOperator === operator.value) {
     if (term2) {
@@ -76,16 +77,19 @@ function operatorSelected(operator) {
     }
   }
   if (currentOperator && currentOperator !== operator.value) {
-    currentOperator = operator.value;
     if (term2) {
       operate(currentOperator, term1, term2);
       term2 = undefined;
     }
-    else operatorHistory.textContent = operatorHistory.textContent.slice(0, operatorHistory.textContent.length-1) + operator.textContent;
+    else {
+      currentOperator = operator.value;
+      operatorHistory.textContent = operatorHistory.textContent.slice(0, operatorHistory.textContent.length-1) + operator.textContent;
+    }
   }
   if (!currentOperator) {
     currentOperator = operator.value;
     operatorHistory.textContent = ` ${term1} ${operator.textContent}`;
+    term2 = undefined;
   }
 }
 operators.forEach((operator) => operator.addEventListener('click', () => operatorSelected(operator)));
