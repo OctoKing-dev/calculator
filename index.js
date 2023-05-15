@@ -1,10 +1,18 @@
 let term1 = "0";
 let term2 = undefined;
+let newTerm = undefined;
 
 let error = false;
 
 function add(a, b) {
   return +a + +b;
+}
+
+function divide(a, b) {
+  if (b === "0") {
+    return NaN;
+  }
+  return +a / +b;
 }
 
 function multiply(a, b) {
@@ -27,6 +35,9 @@ function operate(operation, a, b) {
     case "add":
       result = add(a, b);
       break;
+    case "divide":
+      result = divide(a, b);
+      break;
     case "multiply":
       result = multiply(a, b);
       break;
@@ -43,6 +54,9 @@ function operate(operation, a, b) {
     switch (operation) {
       case "add":
         operator = "+";
+        break;
+      case "divide":
+        operator = "/";
         break;
       case "multiply":
         operator = "*";
@@ -65,12 +79,18 @@ function operate(operation, a, b) {
 }
 const equalsButton = document.getElementById('equals');
 equalsButton.addEventListener('click', () => {
-    if (!currentOperator && lastOperator) repeated = true;
-    if (!term2) term2 = term1;
+    if (!currentOperator) {
+      if (lastOperator) repeated = true;
+      term1 = newTerm ?? term1;
+      newTerm = undefined;
+    }
+    if ((currentOperator || lastOperator) && !term2) term2 = newTerm ?? term1;
+    newTerm = undefined;
     operate(currentOperator ?? lastOperator, term1, term2);
     repeated = false;
     if (!error) {
-      operatorHistory.textContent += " =";
+      if (!currentOperator && !lastOperator) operatorHistory.textContent = `${term1} =`;
+      else operatorHistory.textContent += " =";
     }
     currentOperator = null;
 });
@@ -80,16 +100,18 @@ const operators = document.querySelectorAll('.operator');
 let currentOperator;
 function operatorSelected(operator) {
   if (currentOperator === operator.value) {
-    if (term2) {
-      console.log(term2);
+    if (newTerm) {
+      console.log(newTerm);
+      term2 = newTerm;
+      newTerm = undefined;
       operate(currentOperator, term1, term2);
-      term2 = undefined;
     }
   }
   if (currentOperator && currentOperator !== operator.value) {
-    if (term2) {
+    if (newTerm) {
+      term2 = newTerm;
+      newTerm = undefined;
       operate(currentOperator, term1, term2);
-      term2 = undefined;
     }
     else {
       currentOperator = operator.value;
@@ -98,7 +120,9 @@ function operatorSelected(operator) {
   }
   if (!currentOperator) {
     currentOperator = operator.value;
+    if (newTerm) term1 = newTerm;
     operatorHistory.textContent = ` ${term1} ${operator.textContent}`;
+    newTerm = undefined;
     term2 = undefined;
   }
 }
@@ -106,18 +130,10 @@ operators.forEach((operator) => operator.addEventListener('click', () => operato
 
 function addDigit(digit) {
   // Ignore repeated leading zeroes
-  if (digit === "0") {
-    if (currentOperator)
-      if (term2 === "0") return;
-    else if (term1 === "0") return;
-  }
+  if (digit === "0" && newTerm === "0") return;
 
-  if (currentOperator) 
-    if (!term2) term2 = digit;
-    else term2 = (term2 === "0") ? digit : term2 + digit;
-  else
-    if (!term1) term1 = digit;
-    else term1 = (term1 === "0") ? digit : term1 + digit;
+  if (!newTerm) newTerm = digit;
+  else newTerm = (newTerm === "0") ? digit : newTerm + digit;
 
   updateOutputText();
 }
@@ -131,6 +147,7 @@ const clearButton = document.getElementById('clear');
 function clear() {
   term1 = "0";
   term2 = undefined;
+  newTerm = undefined;
   currentOperator = null;
   lastOperator = null;
   clearOutput();
@@ -138,7 +155,7 @@ function clear() {
 clearButton.addEventListener('click', clear);
 
 function updateOutputText() {
-  outputText.textContent = (currentOperator && term2) ?? term1;
+  outputText.textContent = newTerm ?? ((currentOperator && term2) ?? term1);
 }
 
 function clearOutput() {
