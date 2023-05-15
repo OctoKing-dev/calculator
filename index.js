@@ -114,13 +114,11 @@ const operators = document.querySelectorAll('.operator');
 let currentOperator;
 function operatorSelected(operator) {
   if (error) return;
-  if (currentOperator === operator.value) {
-    if (newTerm) {
-      console.log(newTerm);
-      term2 = newTerm;
-      newTerm = undefined;
-      operate(currentOperator, term1, term2);
-    }
+  if (currentOperator === operator.value && newTerm) {
+    console.log(newTerm);
+    term2 = newTerm;
+    newTerm = undefined;
+    operate(currentOperator, term1, term2);
   }
   if (currentOperator && currentOperator !== operator.value) {
     if (newTerm) {
@@ -148,19 +146,15 @@ function addDecimal() {
   if (error) return;
 
   if (!newTerm) newTerm = "0.";
-  else {
-    if (newTerm.includes('.')) return;
-    else newTerm += '.';
-  }
+  else if (newTerm.includes('.')) return;
+  else newTerm += '.';
 
   updateOutputText();
 }
 decimalButon.addEventListener('click', addDecimal);
 
 function addDigit(digit) {
-  if (error) {
-    clear();
-  }
+  if (error) clear();
 
   // Ignore repeated leading zeroes
   if (digit === "0" && newTerm === "0") return;
