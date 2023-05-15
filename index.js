@@ -171,6 +171,15 @@ function addDigit(digit) {
   updateOutputText();
 }
 
+function removeDigit() {
+  if (error) clear();
+
+  if (!newTerm || newTerm.length === 1) newTerm = "0";
+  else newTerm = newTerm.slice(0, newTerm.length-1);
+
+  updateOutputText();
+}
+
 let digits = document.querySelectorAll('.digit');
 digits.forEach((digit) => digit.addEventListener('click', () => addDigit(digit.value)));
 
@@ -220,8 +229,10 @@ function keyDown(e) {
     case ".":
       addDecimal();
       break;
-    default:
-      console.log(e.key);
+    case "Backspace":
+    case "Delete":
+      removeDigit();
+      break;
   }
 }
 
