@@ -52,7 +52,7 @@ function operate(operation, a, b) {
       result = subtract(a, b);
       break;
     default:
-      result = a;
+      result = +a;
       break;
   }
 
@@ -141,6 +141,20 @@ function operatorSelected(operator) {
   }
 }
 operators.forEach((operator) => operator.addEventListener('click', () => operatorSelected(operator)));
+
+const decimalButon = document.getElementById('decimal');
+function addDecimal() {
+  if (error) return;
+
+  if (!newTerm) newTerm = "0.";
+  else {
+    if (newTerm.includes('.')) return;
+    else newTerm += '.';
+  }
+
+  updateOutputText();
+}
+decimalButon.addEventListener('click', addDecimal);
 
 function addDigit(digit) {
   if (error) {
