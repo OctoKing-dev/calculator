@@ -87,26 +87,27 @@ function operate(operation, a, b) {
   return result;
 }
 const equalsButton = document.getElementById('equals');
-equalsButton.addEventListener('click', () => {
-    if (error) {
-      clear();
-      return;
-    }
-    if (!currentOperator) {
-      if (lastOperator) repeated = true;
-      term1 = newTerm ?? term1;
-      newTerm = undefined;
-    }
-    if ((currentOperator || lastOperator) && !term2) term2 = newTerm ?? term1;
+function equals() {
+  if (error) {
+    clear();
+    return;
+  }
+  if (!currentOperator) {
+    if (lastOperator) repeated = true;
+    term1 = newTerm ?? term1;
     newTerm = undefined;
-    operate(currentOperator ?? lastOperator, term1, term2);
-    repeated = false;
-    if (!error) {
-      if (!currentOperator && !lastOperator) operatorHistory.textContent = `${term1} =`;
-      else operatorHistory.textContent += " =";
-    }
-    currentOperator = null;
-});
+  }
+  if ((currentOperator || lastOperator) && !term2) term2 = newTerm ?? term1;
+  newTerm = undefined;
+  operate(currentOperator ?? lastOperator, term1, term2);
+  repeated = false;
+  if (!error) {
+    if (!currentOperator && !lastOperator) operatorHistory.textContent = `${term1} =`;
+    else operatorHistory.textContent += " =";
+  }
+  currentOperator = null;
+}
+equalsButton.addEventListener('click', equals);
 
 const operators = document.querySelectorAll('.operator');
 
@@ -196,3 +197,32 @@ function clearOutput() {
   outputText.textContent = "0";
 }
 
+// Keyboard controls
+function keyDown(e) {
+  const key = e.key;
+  if (!isNaN(Number.parseInt(key))) return addDigit(key);
+
+  switch (e.key) {
+    case "/":
+    case "*":
+    case "-":
+    case "+":
+      operatorSelected(document.querySelector(`.operator[data-key="${e.key}"]`));
+      if (e.key === "/") e.preventDefault();
+      break;
+    case "Escape":
+      clear();
+      break;
+    case "=":
+    case "Enter":
+      equals();
+      break;
+    case ".":
+      addDecimal();
+      break;
+    default:
+      console.log(e.key);
+  }
+}
+
+window.addEventListener('keydown', keyDown);
