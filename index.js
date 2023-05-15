@@ -10,6 +10,7 @@ function add(a, b) {
 
 function divide(a, b) {
   if (b === "0") {
+    calcError('Cannot divide by zero');
     return NaN;
   }
   return +a / +b;
@@ -21,6 +22,12 @@ function multiply(a, b) {
 
 function subtract(a, b) {
   return +a - +b;
+}
+
+function calcError(msg) {
+  error = true;
+  console.warn(msg);
+  outputText.textContent = msg;
 }
 
 let lastOperator;
@@ -48,6 +55,8 @@ function operate(operation, a, b) {
       result = a;
       break;
   }
+
+  if (error) return NaN;
 
   if (repeated) {
     let operator;
@@ -79,6 +88,10 @@ function operate(operation, a, b) {
 }
 const equalsButton = document.getElementById('equals');
 equalsButton.addEventListener('click', () => {
+    if (error) {
+      clear();
+      return;
+    }
     if (!currentOperator) {
       if (lastOperator) repeated = true;
       term1 = newTerm ?? term1;
@@ -99,6 +112,7 @@ const operators = document.querySelectorAll('.operator');
 
 let currentOperator;
 function operatorSelected(operator) {
+  if (error) return;
   if (currentOperator === operator.value) {
     if (newTerm) {
       console.log(newTerm);
@@ -129,6 +143,10 @@ function operatorSelected(operator) {
 operators.forEach((operator) => operator.addEventListener('click', () => operatorSelected(operator)));
 
 function addDigit(digit) {
+  if (error) {
+    clear();
+  }
+
   // Ignore repeated leading zeroes
   if (digit === "0" && newTerm === "0") return;
 
@@ -150,6 +168,7 @@ function clear() {
   newTerm = undefined;
   currentOperator = null;
   lastOperator = null;
+  error = false;
   clearOutput();
 }
 clearButton.addEventListener('click', clear);
